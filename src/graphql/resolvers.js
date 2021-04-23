@@ -1,14 +1,10 @@
-import { gql } from "apollo-boost";
+import { gql } from "@apollo/client";
+
+import { GET_TREE } from "./queries";
 
 export const typeDefs = gql`
   extend type Mutation {
     ToggleTree: Boolean!
-  }
-`;
-
-const GET_TREE = gql`
-  {
-    Tree @client
   }
 `;
 

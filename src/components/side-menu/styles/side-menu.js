@@ -17,22 +17,19 @@ export const Title = styled.p`
   border-bottom: 1px solid;
 `;
 
-export const Section = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-`;
-
-export const SectionTitle = styled.p`
+export const RenderTree = styled.button`
+  position: absolute;
+  bottom: 0;
+  background: #757575;
+  border-radius: 4px;
   font-size: 16px;
-  color: #757575;
-  text-align: center;
-  width: 100%;
-  border-bottom: 1px solid;
-`;
-
-export const Form = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
+  font-weight: bold;
+  margin: 24px 0 12px;
+  padding: 16px;
+  border: 0;
+  color: white;
+  cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+  }
 `;

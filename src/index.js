@@ -1,26 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { ApolloProvider } from "react-apollo";
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-boost";
+import { ApolloProvider } from "@apollo/client/react";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { GlobalStyles } from "./global.styles";
 import { resolvers, typeDefs } from "./graphql/resolvers";
-
-const httplLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
-});
-const cache = new InMemoryCache();
+import { GET_TREE } from "./graphql/queries";
 
 const client = new ApolloClient({
-  link: httplLink,
-  cache,
+  link: "http://localhost:4000/graphql",
+  cache: new InMemoryCache(),
   typeDefs,
   resolvers,
 });
 
-client.writeData({
+client.writeQuery({
+  query: GET_TREE,
   data: {
     Tree: false,
   },

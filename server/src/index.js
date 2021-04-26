@@ -7,14 +7,13 @@ import { schema } from "./graphql/schema";
 
 const app = express();
 
-const server = new ApolloServer({ schema });
+const server = new ApolloServer({ schema, context: ({ req }) => ({ req }) });
 
 server.applyMiddleware({ app });
 
 mongoose
-  .connect(MONGODB, { useNewUrlParser: true })
+  .connect(MONGODB, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log("we run");
     return app.listen({ port: 4000 }, () =>
       console.log(`${server.graphqlPath}`)
     );

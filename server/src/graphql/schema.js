@@ -1,6 +1,7 @@
 import { makeExecutableSchema } from "apollo-server-express";
-import { Tree, TreeResolver } from "./tree";
-import { User, UserResolver } from "./user";
+import { TreeResolver } from "./tree";
+import { UserResolver } from "./user";
+import { typeDefs } from "./typeDefs";
 
 const resolvers = {
   Query: {
@@ -8,10 +9,11 @@ const resolvers = {
   },
   Mutation: {
     ...UserResolver.Mutation,
+    ...TreeResolver.Mutation,
   },
 };
 
 export const schema = makeExecutableSchema({
-  typeDefs: [Tree, User],
-  resolvers: [resolvers],
+  typeDefs,
+  resolvers,
 });

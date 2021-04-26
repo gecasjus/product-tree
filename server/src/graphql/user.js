@@ -1,32 +1,72 @@
-import { gql } from "apollo-server-express";
-import bcryp from "bcrypt";
+import { gql, UserInputError } from "apollo-server-express";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { userdb } from "../models/user";
 import { SECRET_KEY } from "../../config";
 
-export const User = gql`
-  type User {
-    id: ID!
-    token: String!
-    username: String!
-  }
-  input RegisterInput {
-    username: String!
-    password: String!
-    confirmPassword: String!
-  }
-  type Mutation {
-    register(registerInput: RegisterInput): User!
-  }
-`;
+import { validateRegister, validateLogin } from "../utils/validators";
+
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+    },
+    SECRET_KEY,
+    { expiresIn: "1h" }
+  );
+};
 
 export const UserResolver = {
   Mutation: {
+    async login(_, { username, password }) {
+      const { errors, valid } = validateLogin(username, password);
+      const user = await userdb.findOne({ username });
+
+      if (!valid) {
+        throw new UserInputError("Errors", { errors });
+      }
+
+      if (!user) {
+        errors.general = "User not found";
+        throw new UserInputError("User not found", { errors });
+      }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        errors.general = "Wrong credentials";
+        throw new UserInputError("Wrong credentials", { errors });
+      }
+      const token = generateToken(user);
+
+      return {
+        ...user._doc,
+        id: user._id,
+        token,
+      };
+    },
     async register(
       _,
-      { registerInput: { username, password, confirmPassword } },
-      context
+      { registerInput: { username, password, confirmPassword } }
     ) {
+      const { errors, valid } = validateRegister(
+        username,
+        password,
+        confirmPassword
+      );
+      if (!valid) {
+        throw new UserInputError("Errors", {
+          errors,
+        });
+      }
+
+      const user = await userdb.findOne({ username });
+      if (user) {
+        throw new UserInputError("User already exists", {
+          errors: {
+            username: "Username already exists",
+          },
+        });
+      }
       password = await bcryp.hash(password, 12);
       const newUser = new userdb({
         username,
@@ -34,21 +74,13 @@ export const UserResolver = {
       });
       const res = await newUser.save();
 
-      const token = jwt.sign(
-        {
-          id: res.id,
-          username: res.username,
-        },
-        SECRET_KEY,
-        { expiresIn: "1h" }
-      );
+      const token = generateToken(res);
+
       return {
         ...res._doc,
         id: res._id,
         token,
       };
-      // VALIDATE USER DATA
-      // MAKE SURE USER DOESNT ALREADY EXIST
     },
   },
 };

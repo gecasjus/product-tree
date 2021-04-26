@@ -1,16 +1,16 @@
 import { model, Schema } from "mongoose";
 
-const child = new Schema({
-  id: String,
-  parent: String,
-  value: String,
-  price: Number,
-});
 const treeSchema = new Schema({
+  id: String,
   value: String,
   price: Number,
   username: String,
-  children: [child],
+  parent: String,
+  children: [],
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "users",
+  },
 });
 
 export const treedb = model("trees", treeSchema);

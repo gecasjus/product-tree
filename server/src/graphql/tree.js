@@ -1,5 +1,4 @@
 import { verifyAuth } from "../utils/auth";
-import { unwind } from "../utils/unwind";
 import { treedb } from "../models/tree";
 
 export const TreeResolver = {
@@ -14,58 +13,63 @@ export const TreeResolver = {
     },
   },
   Mutation: {
-    async createTree(_, { tree: args }, context) {
+    async createTree(
+      _,
+      { tree: { id, value, price, username, parent, treeId } },
+      context
+    ) {
       const user = verifyAuth(context);
-
-      const newTree = new treedb({
-        ...args,
-        username: user.username,
-      });
-
+      //getting the main tree
+      const trees = await treedb.find({ treeId: treeId }).lean();
+      const parentEl = await treedb.findOne({ id: parent });
+      let newTree;
+      if (trees.length === 0) {
+        newTree = new treedb({
+          id,
+          value,
+          price,
+          username,
+          parent,
+          treeId,
+          username: user.username,
+        });
+      } else {
+        const newAncestors = [...parentEl.ancestors, parent];
+        newTree = new treedb({
+          id,
+          value,
+          price,
+          username,
+          parent,
+          treeId,
+          ancestors: newAncestors,
+          username: user.username,
+        });
+      }
       const tree = await newTree.save();
 
+      context.pubsub.publish("NEW_NODE", {
+        newNode: tree,
+      });
       return tree;
     },
-    async createNode(_, { node: { id, parent, value, price, tree } }) {
-      const newNode = { id, value, price, parent };
+    async setPrice(_, { pricing: { id, price } }) {
+      const doc = await treedb.findOne({ id: id });
 
-      new Promise((resolve, reject) => {
-        const currentTree = treedb.find({ id: tree }).lean();
-        resolve(currentTree);
-      })
-        .then((res) => {
-          const flat = unwind(res);
-          const base = {
-            username: res[0].username,
-            price: res[0].price,
-            value: res[0].value,
-            id: res[0].id,
-            parent: res[0].parent,
-          };
-          flat.push(base, newNode);
-          let main;
-          const idMapping = flat.reduce((acc, el, i) => {
-            acc[el.id] = i;
-            return acc;
-          }, {});
-          flat.forEach((el) => {
-            if (el.parent === null) {
-              main = el;
-              return;
-            }
-            // Use our mapping to locate the parent element in our data array
-            const parentEl = flat[idMapping[el.parent]];
-            // Add our current el to its parent's `children` array
-            parentEl.children = [...(parentEl.children || []), el];
-          });
-          const updatedTree = treedb.replaceOne({ id: tree }, main, {
-            upsert: true,
-          });
-          return updatedTree;
-        })
-        .catch((error) => {
-          console.log(error);
+      const updateArr = [...doc.ancestors, id];
+
+      try {
+        updateArr.forEach(async (i) => {
+          await treedb.updateOne({ id: i }, { $inc: { price: price } });
         });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  Subscription: {
+    newNode: {
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator("NEW_NODE"),
     },
   },
 };

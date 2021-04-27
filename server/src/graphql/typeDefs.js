@@ -15,29 +15,22 @@ export const typeDefs = gql`
     id: ID!
     value: String!
     price: Int
-    username: String!
+    username: String
     parent: String
+    ancestors: [String]
+    treeId: String!
   }
   input TreeInput {
     id: ID!
     value: String!
     price: Int
-    username: String!
+    username: String
     parent: String
+    treeId: String!
   }
-  type Node {
+  input PriceInput {
     id: ID!
-    parent: String!
-    tree: String!
-    value: String!
-    price: Int
-  }
-  input NodeInput {
-    id: ID!
-    parent: String!
-    tree: String!
-    value: String!
-    price: Int
+    price: Int!
   }
   type Query {
     getTree: [Tree]
@@ -46,6 +39,9 @@ export const typeDefs = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     createTree(tree: TreeInput): Tree!
-    createNode(node: NodeInput): Node
+    setPrice(pricing: PriceInput): Tree
+  }
+  type Subscription {
+    newNode: Tree!
   }
 `;

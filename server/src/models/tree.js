@@ -6,7 +6,8 @@ const treeSchema = new Schema({
   price: Number,
   username: String,
   parent: String,
-  children: [],
+  treeId: String,
+  ancestors: [String],
   user: {
     type: Schema.Types.ObjectId,
     ref: "users",

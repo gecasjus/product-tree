@@ -11,6 +11,9 @@ const resolvers = {
     ...UserResolver.Mutation,
     ...TreeResolver.Mutation,
   },
+  Subscription: {
+    ...TreeResolver.Subscription,
+  },
 };
 
 export const schema = makeExecutableSchema({

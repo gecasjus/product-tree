@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
 import { v4 as uuidv4 } from "uuid";
 import { SideMenu, Form } from "../components";
-import { RENDER_TREE, SEND_TREE } from "../graphql/mutations";
 
 export function SideMenuContainer() {
   const [labels, setLabels] = useState([{ id: 0, label: "Add new category" }]);
@@ -13,7 +12,6 @@ export function SideMenuContainer() {
 
   const [value, setValue] = useState("");
 
-  const [toggleTree] = useMutation(RENDER_TREE);
   //const [sendTree, { data }] = useMutation(SEND_TREE);
 
   const parentRef = useRef(parent);
@@ -83,9 +81,7 @@ export function SideMenuContainer() {
           Submit
         </Form.Submit>
       </Form>
-      <SideMenu.RenderTree onClick={toggleTree}>
-        Create a tree
-      </SideMenu.RenderTree>
+      <SideMenu.RenderTree>Create a tree</SideMenu.RenderTree>
     </SideMenu>
   );
 }

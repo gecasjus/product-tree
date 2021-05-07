@@ -33,7 +33,7 @@ export const typeDefs = gql`
     price: Int!
   }
   type Query {
-    getTree: [Tree]
+    getTree(treeId: Int): [Tree]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!

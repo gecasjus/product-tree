@@ -3,9 +3,9 @@ import { treedb } from "../models/tree";
 
 export const TreeResolver = {
   Query: {
-    getTree: async () => {
+    getTree: async (_, { treeId }) => {
       try {
-        const currentTree = await treedb.find();
+        const currentTree = await treedb.find({ treeId: treeId });
         return currentTree;
       } catch (error) {
         console.log(error);
@@ -18,8 +18,12 @@ export const TreeResolver = {
       { tree: { id, value, price, username, parent, treeId } },
       context
     ) {
+      if (value.trim() === "") {
+        throw new Error("Input field is empty");
+      }
+
       const user = verifyAuth(context);
-      //getting the main tree
+
       const trees = await treedb.find({ treeId: treeId }).lean();
       const parentEl = await treedb.findOne({ id: parent });
       let newTree;

@@ -1,3 +1,12 @@
 import React from "react";
+import { UserConfirmation } from "../containers/user-confirmation";
 
-function Unauth() {}
+//homepage logo
+//UserConfirm container
+export function Unauth() {
+  return (
+    <>
+      <UserConfirmation />
+    </>
+  );
+}

@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -11,6 +12,9 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx"],
+    alias: {
+      "../../theme.config$": path.join(__dirname, "styles/theme.config"),
+    },
   },
   mode: "development",
   devServer: {
@@ -29,6 +33,28 @@ module.exports = {
           loader: "babel-loader",
         },
       },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
+          "less-loader",
+        ],
+      },
+      {
+        test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
+        use: [
+          {
+            loader: "url-loader",
+          },
+        ],
+      },
+      {
+        test: /\.(png|j?g|gif|ico)?$/,
+        use: "url-loader",
+      },
     ],
   },
   plugins: [
@@ -36,6 +62,9 @@ module.exports = {
       template: __dirname + "/src/index.html",
       filename: "index.html",
       inject: "body",
+    }),
+    new MiniCssExtractPlugin({
+      filename: "styles/[name].[contenthash].css",
     }),
   ],
 };

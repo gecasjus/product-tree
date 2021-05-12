@@ -32,7 +32,7 @@ export function Tree({ data, loading }) {
 
     console.log(nodes);
     nodes[0].fixed = true;
-    nodes[0].x = -3;
+    nodes[0].x = -45;
     nodes[0].y = 10;
 
     const simulation = d3
@@ -81,12 +81,10 @@ export function Tree({ data, loading }) {
       .attr("alignment-baseline", "alphabetic")
       .attr("x", 40)
       .attr("y", 27)
+      .attr("fill", (d) => (d.data.parent === null ? "white" : "black"))
       .text((d) => d.data.value)
       .clone(true)
-      .lower()
-      .attr("fill", "none")
-      .attr("stroke", "white")
-      .attr("stroke-width", 3);
+      .lower();
 
     simulation.on("tick", () => {
       link
@@ -97,7 +95,6 @@ export function Tree({ data, loading }) {
 
       node.attr("transform", (d) => `translate(${d.x - 50},${d.y - 30})`);
     });
-
     return svg.node();
   };
 

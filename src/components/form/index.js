@@ -1,19 +1,29 @@
 import React from "react";
 import {
   Container,
-  Input,
+  Inner,
   Select,
+  Outer,
   Submit,
   SmallText,
   ReferenceContainer,
+  Register,
 } from "./styles/form";
 
 export default function Form({ children, ...restProps }) {
   return <Container {...restProps}>{children}</Container>;
 }
 
-Form.Input = function FormInput({ children, ...restProps }) {
-  return <Input {...restProps}>{children}</Input>;
+Form.Inner = function FormInner({ children, ...restProps }) {
+  return <Inner {...restProps}>{children}</Inner>;
+};
+
+Form.Outer = function FormOuter({ children, ...restProps }) {
+  return <Outer {...restProps}>{children}</Outer>;
+};
+
+Form.Register = function FormRegister({ children, ...restProps }) {
+  return <Register {...restProps}>{children}</Register>;
 };
 
 Form.SmallText = function FormSmallText({ children, ...restProps }) {

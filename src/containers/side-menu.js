@@ -12,8 +12,6 @@ export function SideMenuContainer() {
 
   const [value, setValue] = useState("");
 
-  //const [sendTree, { data }] = useMutation(SEND_TREE);
-
   const parentRef = useRef(parent);
 
   const setParentRef = (data) => {
@@ -27,12 +25,6 @@ export function SideMenuContainer() {
       setLabels(arr);
     }
   }, [nodes]);
-
-  // useEffect(() => {
-  //   if (nodes) {
-  //     sendTree({ products: nodes });
-  //   }
-  // }, [nodes]);
 
   const submitNode = () => {
     if (!parent) {
@@ -59,11 +51,6 @@ export function SideMenuContainer() {
     <SideMenu>
       <SideMenu.Title>Product Tree</SideMenu.Title>
       <Form>
-        <Form.Input
-          placeholder="Product Name"
-          value={value}
-          onChange={({ target }) => setValue(target.value)}
-        />
         <Form.ReferenceContainer>
           <Form.SmallText>Choose a reference</Form.SmallText>
           <Form.Select

@@ -1,12 +1,19 @@
-import React from "react";
-import { UserConfirmation } from "../containers/user-confirmation";
+import React, { useState } from "react";
+import { Form } from "../components";
+import { Login } from "../containers/login";
+import { Registration } from "../containers/registration";
 
-//homepage logo
-//UserConfirm container
-export function Unauth() {
+export function Unauth(props) {
+  const [open, setOpen] = useState(false);
+
+  const toggleIcon = () => {
+    setOpen((i) => !i);
+    props.setUserData({});
+  };
   return (
-    <>
-      <UserConfirmation />
-    </>
+    <Form>
+      <Login toggleIcon={toggleIcon} open={open} {...props} />
+      {open && <Registration {...props} />}
+    </Form>
   );
 }

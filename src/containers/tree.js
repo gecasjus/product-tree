@@ -30,7 +30,6 @@ export function Tree({ data, loading }) {
     const links = root.links();
     const nodes = root.descendants();
 
-    console.log(nodes);
     nodes[0].fixed = true;
     nodes[0].x = -45;
     nodes[0].y = 10;

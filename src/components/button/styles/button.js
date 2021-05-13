@@ -2,7 +2,6 @@ import styled from "styled-components/macro";
 import { animated } from "react-spring";
 
 export const CustomButton = styled.button`
-  background: ${(props) => (props.color ? "white" : "#1f305e")};
   width: 100%;
   border-radius: 4px;
   font-size: 12px;
@@ -10,14 +9,23 @@ export const CustomButton = styled.button`
   margin: 24px 0 12px;
   padding: 16px;
   border: 0;
-  color: ${(props) => (props.color ? "#3457d5" : "white")};
   cursor: pointer;
 `;
 
 export const Container = styled(animated.div)``;
-
+export const Path = styled(animated.div)``;
 export const Inner = styled(animated.div)``;
 
+export const LayoutWrapper = styled(animated.div)``;
+
+export const StripeWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
 export const Stripe = styled.div`
   position: relative;
   width: 100%;

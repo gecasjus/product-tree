@@ -67,7 +67,7 @@ export const UserResolver = {
           },
         });
       }
-      password = await bcryp.hash(password, 12);
+      password = await bcrypt.hash(password, 12);
       const newUser = new userdb({
         username,
         password,

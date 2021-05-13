@@ -4,7 +4,7 @@ export const Container = styled.div`
   position: absolute;
   bottom: 0;
   right: 50px;
-  height: 400px;
+  height: 350px;
   width: 300px;
   margin: 35px;
   border-radius: 10px;
@@ -17,9 +17,10 @@ export const Register = styled.div`
   background: #3457d5;
   bottom: 0;
   right: 0;
-  height: 450px;
+  height: 500px;
   width: 300px;
   border-radius: 10px;
+  z-index: 4;
 `;
 
 export const Outer = styled.div`
@@ -38,6 +39,7 @@ export const Inner = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  z-index: 3;
 `;
 
 export const Select = styled.select`
@@ -69,7 +71,6 @@ export const Submit = styled.button`
 `;
 
 export const SmallText = styled.h3`
-  color: ${(props) => (props.color ? "white" : "black")};
   font-weight: 300;
 `;
 
